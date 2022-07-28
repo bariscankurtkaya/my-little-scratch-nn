@@ -40,12 +40,12 @@ class Scratch_NN:
         self.pixels_count, self.train_image_count = self.test_images.shape
 
     def init_params(self):
-        self.W1 = np.random.normal(size=(10, 784)) * np.sqrt(1./(784))
-        self.b1 = np.random.normal(size=(10, 1))
-        self.W2 = np.random.normal(size=(10, 10)) * np.sqrt(1./10)
+        self.W1 = np.random.normal(size=(50, 784)) * np.sqrt(1./(784))
+        self.b1 = np.random.normal(size=(50, 1))
+        self.W2 = np.random.normal(size=(10, 50)) * np.sqrt(1./10)
         self.b2 = np.random.normal(size=(10, 1))
 
-        self.alpha = 0.1
+        self.alpha = 0.001
         self.iterations = 500
 
     def forward_prop(self, images):
@@ -95,7 +95,7 @@ class Scratch_NN:
 
 
     def test_prediction(self, index):
-        current_image = self.test_images[:, index, None]
+        current_image = self.train_images[:, index, None]
         prediction = self.make_predictions(current_image)
         label = self.train_classes[index]
         print("Prediction: ", prediction)
