@@ -1,3 +1,0 @@
-/Users/bariscankurtkaya/github/my-little-scratch-nn/src/cpp_cuda/neural_network/cmake-build-debug/CMakeFiles/neural_network.dir
-/Users/bariscankurtkaya/github/my-little-scratch-nn/src/cpp_cuda/neural_network/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/bariscankurtkaya/github/my-little-scratch-nn/src/cpp_cuda/neural_network/cmake-build-debug/CMakeFiles/rebuild_cache.dir
