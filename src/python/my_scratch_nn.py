@@ -34,10 +34,10 @@ class Scratch_NN:
         self.train_images = self.train_data[1: self.class_plus_pixels_count]
 
         #To prevent the gradient from vanishing
-        self.test_images = self.test_images / 255
-        self.train_images = self.train_images / 255
+        self.test_images = self.test_images / 255.
+        self.train_images = self.train_images / 255.
 
-        self.pixels_count, self.train_image_count = self.test_images.shape
+        self.pixels_count, self.train_image_count = self.train_images.shape
 
     def init_params(self):
         self.W1 = np.random.normal(size=(10, 784)) * np.sqrt(1./(784))
@@ -50,7 +50,7 @@ class Scratch_NN:
 
     def forward_prop(self, images):
         self.Z1 = self.W1.dot(images) + self.b1
-        self.A1 = self.math_eq.ReLU(self.Z1)
+        self.A1 = self.math_eq.Leaky_ReLU(self.Z1)
         self.Z2 = self.W2.dot(self.A1) + self.b2
         self.A2 = self.math_eq.softmax(self.Z2)
 
@@ -59,7 +59,7 @@ class Scratch_NN:
         self.dZ2 = self.A2 - self.one_hot_classes
         self.dW2 = (1/self.train_image_count) * self.dZ2.dot(self.A1.T)
         self.db2 = (1/self.train_image_count) * np.sum(self.dZ2)
-        self.dZ1 = self.W2.T.dot(self.dZ2) * self.math_eq.ReLU_deriv(self.Z1)
+        self.dZ1 = self.W2.T.dot(self.dZ2) * self.math_eq.Leaky_ReLU_deriv(self.Z1)
         self.dW1 = (1/self.train_image_count) * self.dZ1.dot(images.T)
         self.db1 = (1/self.train_image_count) * np.sum(self.dZ1)
 
@@ -79,10 +79,15 @@ class Scratch_NN:
 
     def gradient_descent(self):
         self.init_params()
+        #print("1 ",self.W1[0][320])
         for i in range(self.iterations):
+            #print("2 ",self.W1[0][320])
             self.forward_prop(self.train_images)
+            #print("3 ",self.W1[0][320])
             self.backward_prop(self.train_images, self.train_classes)
+            #print("4 ",self.W1[0][320])
             self.update_params()
+            #print("7 ",self.W1[0][320], "\n")
             if i % 10 == 0:
                 print("Iteration: ", i)
                 predictions = self.get_predictions(self.A2)
@@ -145,7 +150,7 @@ if __name__ == "__main__":
     if index == 0:
         print("Train")
         scratch__nn.gradient_descent()
-        index = 1
+        #index = 1
 
     if index == 1:
         print("Test")
