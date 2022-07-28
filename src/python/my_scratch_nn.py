@@ -34,10 +34,10 @@ class Scratch_NN:
         self.train_images = self.train_data[1: self.class_plus_pixels_count]
 
         #To prevent the gradient from vanishing
-        self.test_images = self.test_images / 255
-        self.train_images = self.train_images / 255
+        self.test_images = self.test_images / 255.
+        self.train_images = self.train_images / 255.
 
-        self.pixels_count, self.train_image_count = self.test_images.shape
+        self.pixels_count, self.train_image_count = self.train_images.shape
 
     def init_params(self):
         self.W1 = np.random.normal(size=(50, 784)) * np.sqrt(1./(784))
@@ -50,7 +50,7 @@ class Scratch_NN:
 
     def forward_prop(self, images):
         self.Z1 = self.W1.dot(images) + self.b1
-        self.A1 = self.math_eq.ReLU(self.Z1)
+        self.A1 = self.math_eq.Leaky_ReLU(self.Z1)
         self.Z2 = self.W2.dot(self.A1) + self.b2
         self.A2 = self.math_eq.softmax(self.Z2)
 
@@ -59,7 +59,7 @@ class Scratch_NN:
         self.dZ2 = self.A2 - self.one_hot_classes
         self.dW2 = (1/self.train_image_count) * self.dZ2.dot(self.A1.T)
         self.db2 = (1/self.train_image_count) * np.sum(self.dZ2)
-        self.dZ1 = self.W2.T.dot(self.dZ2) * self.math_eq.ReLU_deriv(self.Z1)
+        self.dZ1 = self.W2.T.dot(self.dZ2) * self.math_eq.Leaky_ReLU_deriv(self.Z1)
         self.dW1 = (1/self.train_image_count) * self.dZ1.dot(images.T)
         self.db1 = (1/self.train_image_count) * np.sum(self.dZ1)
 
@@ -97,7 +97,7 @@ class Scratch_NN:
     def test_prediction(self, index):
         current_image = self.train_images[:, index, None]
         prediction = self.make_predictions(current_image)
-        label = self.train_classes[index]
+        label = self.test_classes[index]
         print("Prediction: ", prediction)
         print("Label: ", label)
 
