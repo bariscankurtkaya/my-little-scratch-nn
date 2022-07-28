@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from sklearn.metrics import accuracy_score
 
 class Scratch_NN:
     def __init__(self):
@@ -40,12 +41,12 @@ class Scratch_NN:
         self.pixels_count, self.train_image_count = self.train_images.shape
 
     def init_params(self):
-        self.W1 = np.random.normal(size=(50, 784)) * np.sqrt(1./(784))
-        self.b1 = np.random.normal(size=(50, 1))
-        self.W2 = np.random.normal(size=(10, 50)) * np.sqrt(1./10)
+        self.W1 = np.random.normal(size=(10, 784)) * np.sqrt(1./(784))
+        self.b1 = np.random.normal(size=(10, 1))
+        self.W2 = np.random.normal(size=(10, 10)) * np.sqrt(1./10)
         self.b2 = np.random.normal(size=(10, 1))
 
-        self.alpha = 0.001
+        self.alpha = 0.1
         self.iterations = 500
 
     def forward_prop(self, images):
@@ -86,7 +87,9 @@ class Scratch_NN:
             if i % 10 == 0:
                 print("Iteration: ", i)
                 predictions = self.get_predictions(self.A2)
-                print(self.get_accuracy(predictions, self.train_classes))
+                accuracy_score = self.get_accuracy(predictions, self.train_classes)
+                self.alpha = int(np.exp((1 - accuracy_score) / 100))
+                print(accuracy_score)
 
     def make_predictions(self, X):
         self.forward_prop(X)
@@ -97,7 +100,7 @@ class Scratch_NN:
     def test_prediction(self, index):
         current_image = self.train_images[:, index, None]
         prediction = self.make_predictions(current_image)
-        label = self.test_classes[index]
+        label = self.train_classes[index]
         print("Prediction: ", prediction)
         print("Label: ", label)
 
