@@ -79,15 +79,10 @@ class Scratch_NN:
 
     def gradient_descent(self):
         self.init_params()
-        #print("1 ",self.W1[0][320])
         for i in range(self.iterations):
-            #print("2 ",self.W1[0][320])
             self.forward_prop(self.train_images)
-            #print("3 ",self.W1[0][320])
             self.backward_prop(self.train_images, self.train_classes)
-            #print("4 ",self.W1[0][320])
             self.update_params()
-            #print("7 ",self.W1[0][320], "\n")
             if i % 10 == 0:
                 print("Iteration: ", i)
                 predictions = self.get_predictions(self.A2)
@@ -102,7 +97,7 @@ class Scratch_NN:
     def test_prediction(self, index):
         current_image = self.test_images[:, index, None]
         prediction = self.make_predictions(current_image)
-        label = self.train_classes[index]
+        label = self.test_classes[index]
         print("Prediction: ", prediction)
         print("Label: ", label)
 
@@ -150,7 +145,7 @@ if __name__ == "__main__":
     if index == 0:
         print("Train")
         scratch__nn.gradient_descent()
-        #index = 1
+        index = 1
 
     if index == 1:
         print("Test")
