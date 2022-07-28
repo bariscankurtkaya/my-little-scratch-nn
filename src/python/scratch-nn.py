@@ -21,10 +21,10 @@ _, m_train = X_train.shape
 
 
 def init_params():
-    W1 = np.random.rand(10, 784) - 0.5
-    b1 = np.random.rand(10, 1) - 0.5
-    W2 = np.random.rand(10, 10) - 0.5
-    b2 = np.random.rand(10, 1) - 0.5
+    W1 = np.random.rand(10, 784)* np.sqrt(1./(784))
+    b1 = np.random.rand(10, 1)
+    W2 = np.random.rand(10, 10) * np.sqrt(1./(10))
+    b2 = np.random.rand(10, 1)
     return W1, b1, W2, b2
 
 
@@ -39,7 +39,7 @@ def softmax(Z):
 
 def forward_prop(W1, b1, W2, b2, X):
     Z1 = W1.dot(X) + b1
-    A1 = ReLU(Z1)
+    A1 = Leaky_ReLU(Z1)
     Z2 = W2.dot(A1) + b2
     A2 = softmax(Z2)
     return Z1, A1, Z2, A2
@@ -48,6 +48,13 @@ def forward_prop(W1, b1, W2, b2, X):
 def ReLU_deriv(Z):
     return Z > 0
 
+def Leaky_ReLU(Z):
+    Z = np.where(Z > 0, Z, Z * 0.1)
+    return Z
+    
+def Leaky_ReLU_deriv(Z):
+    Z = np.where(Z > 0, 1, 0.1)
+    return Z
 
 def one_hot(Y):
     one_hot_Y = np.zeros((Y.size, Y.max() + 1))
@@ -61,7 +68,7 @@ def backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y):
     dZ2 = A2 - one_hot_Y
     dW2 = 1 / m * dZ2.dot(A1.T)
     db2 = 1 / m * np.sum(dZ2)
-    dZ1 = W2.T.dot(dZ2) * ReLU_deriv(Z1)
+    dZ1 = W2.T.dot(dZ2) * Leaky_ReLU_deriv(Z1)
     dW1 = 1 / m * dZ1.dot(X.T)
     db1 = 1 / m * np.sum(dZ1)
     return dW1, db1, dW2, db2

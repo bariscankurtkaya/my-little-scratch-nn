@@ -46,7 +46,7 @@ class Scratch_NN:
         self.b2 = np.random.normal(size=(10, 1))
 
         self.alpha = 0.1
-        self.iterations = 500
+        self.iterations = 5
 
     def forward_prop(self, images):
         self.Z1 = self.W1.dot(images) + self.b1
@@ -64,7 +64,9 @@ class Scratch_NN:
         self.db1 = (1/self.train_image_count) * np.sum(self.dZ1)
 
     def update_params(self):
+        print("5 ",self.W1[0][320], "---", self.dW1[0][320])
         self.W1 = self.W1 - self.alpha * self.dW1
+        print("6 ",self.W1[0][320])
         self.b1 = self.b1 - self.alpha * self.db1
         self.W2 = self.W2 - self.alpha * self.dW2
         self.b2 = self.b2 - self.alpha * self.db2
@@ -79,10 +81,15 @@ class Scratch_NN:
 
     def gradient_descent(self):
         self.init_params()
+        print("1 ",self.W1[0][320])
         for i in range(self.iterations):
+            print("2 ",self.W1[0][320])
             self.forward_prop(self.train_images)
+            print("3 ",self.W1[0][320])
             self.backward_prop(self.train_images, self.train_classes)
+            print("4 ",self.W1[0][320])
             self.update_params()
+            print("7 ",self.W1[0][320], "\n")
             if i % 10 == 0:
                 print("Iteration: ", i)
                 predictions = self.get_predictions(self.A2)
@@ -145,7 +152,7 @@ if __name__ == "__main__":
     if index == 0:
         print("Train")
         scratch__nn.gradient_descent()
-        index = 1
+        #index = 1
 
     if index == 1:
         print("Test")
