@@ -21,7 +21,7 @@ _, m_train = X_train.shape
 
 
 def init_params():
-    W1 = np.random.rand(10, 784)* np.sqrt(1./(784))
+    W1 = np.random.rand(10, 784) * np.sqrt(1./(784))
     b1 = np.random.rand(10, 1)
     W2 = np.random.rand(10, 10) * np.sqrt(1./(10))
     b2 = np.random.rand(10, 1)
