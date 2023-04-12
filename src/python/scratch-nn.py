@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
+np.random.seed(0)
+
 data = pd.read_csv("../../dataset/train.csv")
 
 data = np.array(data)
@@ -122,6 +124,26 @@ def test_prediction(index, W1, b1, W2, b2):
     plt.imshow(current_image, interpolation='nearest')
     plt.show()
 
+def inv_Leaky_ReLU(Z):
+    Z = np.where(Z > 0, Z, Z * 10)
+    return Z
+
+def inverse_nn(Y, W1, b1, W2, b2):
+    print(Y.shape)
+    Z2 = Y # 10, 1
+    print(W2.T.shape, Z2.shape, "+", b2.shape)
+
+    invZ2 = Z2 - b2
+    A1 = W2.T.dot(invZ2) # 10 , 1
+    print(A1.shape)
+    Z1 = inv_Leaky_ReLU(A1)# 10, 1
+    
+    invZ1 = Z1 - b1
+    print(W1.T.shape, Z1.shape, "+", b1.shape)
+    X = W1.T.dot(invZ1) # 784 ,1
+    
+    X = X.reshape((28,28)) * 255
+    return X
 
 if __name__ == "__main__":
     W1 = 0
@@ -131,10 +153,8 @@ if __name__ == "__main__":
     index = 0
     if index == 0:
         print("Train")
-        W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 500)
-        index = 1
-    else:
-        print("Error Train")
+        W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 250)
+        index = 3 #1
 
     if index == 1:
         print("Test")
@@ -143,14 +163,25 @@ if __name__ == "__main__":
         test_prediction(2, W1, b1, W2, b2)
         test_prediction(3, W1, b1, W2, b2)
         index = 2
-    else:
-        print("Error Test")
 
     if index == 2:
         print("Accuracy")
         dev_predictions = make_predictions(X_dev, W1, b1, W2, b2)
         print(get_accuracy(dev_predictions, Y_dev))
+        index = 3
 
-    else:
-        print("Error Accuracy")
+    if index == 3:
+        print("Inverse NN")
+        const = 54.44506444837289
+        Y = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).reshape((10,1))
+        
+        for i in range(10):
+            Y[i] = const
+            if i > 0:
+                Y[i-1] = 0
 
+            inn = inverse_nn(Y = Y, W1= W1, b1= b1, W2 = W2, b2 = b2)
+
+            plt.gray()
+            plt.imshow(inn, interpolation='nearest')
+            plt.show()
